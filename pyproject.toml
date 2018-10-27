@@ -6,6 +6,7 @@ authors = ["Abraham Yusuf <abraham.yusuf@ehealthnigeria.org>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
+sqlalchemy = "^1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

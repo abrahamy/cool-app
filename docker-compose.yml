@@ -1,0 +1,42 @@
+version: "3.0"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.6-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "5672:5672"
+    networks:
+      cool_app:
+        aliases:
+          - ${RABBITMQ_HOSTNAME}
+
+  postgres:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      cool_app:
+        aliases:
+          - ${POSTGRES_DB_HOSTNAME}
+  consumer:
+    build: .
+    environment:
+      - LOG_FILE
+      - RABBITMQ_URI
+      - DATABASE_URI
+    command: /usr/local/bin/cool_app consumer
+
+volumes:
+  data:
+
+networks:
+  cool_app:

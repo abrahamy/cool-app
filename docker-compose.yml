@@ -4,35 +4,42 @@ services:
   rabbitmq:
     image: rabbitmq:3.6-alpine
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
-    ports:
-      - "5672:5672"
+      RABBITMQ_DEFAULT_USER: cool_app
+      RABBITMQ_DEFAULT_PASS: secret
+    expose:
+      - "5672"
     networks:
       cool_app:
         aliases:
-          - ${RABBITMQ_HOSTNAME}
+          - broker
 
   postgres:
     image: postgres:10-alpine
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
+      POSTGRES_USER: cool_app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: cool_app
     volumes:
       - data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     networks:
       cool_app:
         aliases:
-          - ${POSTGRES_DB_HOSTNAME}
+          - db
   consumer:
     build: .
     environment:
-      - LOG_FILE
-      - RABBITMQ_URI
-      - DATABASE_URI
+      LOG_FILE: /var/log/cool-app.log
+      RABBITMQ_URI: "amqp://cool_app:secret@broker:5672/?backpressure_detection=t"
+      DATABASE_URI: "postgresql://cool_app:secret@db:5432/cool_app"
+    networks:
+      cool_app:
+        aliases:
+          - consumer
+    links:
+      - postgres:db
+      - rabbitmq:broker
     command: /usr/local/bin/cool_app consumer
 
 volumes:

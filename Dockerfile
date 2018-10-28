@@ -24,6 +24,6 @@ RUN cd /usr/src/cool-app \
   && poetry build \
   && pip install --upgrade dist/*.whl \
   && cd && rm -rf /usr/src/cool-app \
-  && which cool-app
+  && which cool_app
 
-CMD [ "/usr/local/bin/cool-app", "consumer" ]
+CMD [ "/usr/local/bin/cool_app", "consumer" ]

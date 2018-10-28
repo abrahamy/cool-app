@@ -8,6 +8,7 @@ authors = ["Abraham Yusuf <abraham.yusuf@ehealthnigeria.org>"]
 python = "^3.6"
 sqlalchemy = "^1.2"
 pika = "^0.12.0"
+psycopg2 = "^2.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"

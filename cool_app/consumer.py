@@ -21,9 +21,7 @@ class RabbitMQConsumer(RabbitMQ):
         """Handle queue declared event"""
         log.info("RabbitMQ queue declared")
         self.queue = frame.method.queue
-        self.channel.basic_consume(
-            self.process_message, queue=self.queue, no_ack=True, exclusive=True
-        )
+        self.channel.basic_consume(self.process_message, self.queue, no_ack=True)
 
     def process_message(self, channel, method, properties, body):
         """Process received messages"""

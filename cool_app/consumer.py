@@ -1,11 +1,30 @@
+import json
 import logging
+from multiprocessing import Process
 
 import pika
+import sqlalchemy
 
-from cool_app import RabbitMQ
-
+from cool_app import Message, RabbitMQ
+from cool_app.models import Customer, Session
 
 log = logging.getLogger(__name__)
+
+
+def persist_message(message: Message):
+    """Stores the message into a database"""
+    session = Session()
+
+    try:
+        customer = Customer(name=message.name, email=message.email)
+        session.add(customer)
+        session.commit()
+    except sqlalchemy.exc.IntegrityError:
+        session.rollback()
+    except Exception:
+        log.exception("Unexpected error")
+    finally:
+        session.close()
 
 
 class RabbitMQConsumer(RabbitMQ):
@@ -18,4 +37,7 @@ class RabbitMQConsumer(RabbitMQ):
 
     def process_message(self, method, head, body):
         """Process received messages"""
-        pass
+        data = json.loads(body)
+        message = Message(*data)
+        p = Process(target=persist_message, args=(message,))
+        p.start()

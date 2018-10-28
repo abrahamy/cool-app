@@ -20,6 +20,7 @@ class RabbitMQConsumer(RabbitMQ):
     def on_queue_declared(self, frame: pika.frame.Frame):
         """Handle queue declared event"""
         log.info("RabbitMQ queue declared")
+        self.queue = frame.method.queue
         self.channel.basic_consume(
             self.process_message, queue=self.queue, no_ack=True, exclusive=True
         )
@@ -43,8 +44,6 @@ class RabbitMQConsumer(RabbitMQ):
             log.info("Message persisted successfully")
         except sqlalchemy.exc.IntegrityError:
             session.rollback()
-        except Exception:
-            log.exception("Unexpected error")
         finally:
             session.close()
 

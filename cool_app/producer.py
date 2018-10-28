@@ -25,6 +25,7 @@ class RabbitMQProducer(RabbitMQ):
         log.info("RabbitMQ queue declared")
         log.info("Sending all messages in outbox")
 
+        self.queue = frame.method.queue
         message_count = len(self.outbox)
 
         for message in self.outbox:

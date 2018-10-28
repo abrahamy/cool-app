@@ -8,6 +8,8 @@ services:
       RABBITMQ_DEFAULT_PASS: secret
     expose:
       - "5672"
+    ports:
+      - "5672:5672"
     networks:
       cool_app:
         aliases:

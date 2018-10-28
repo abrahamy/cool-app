@@ -26,4 +26,8 @@ RUN cd /usr/src/cool-app \
   && cd && rm -rf /usr/src/cool-app \
   && which cool_app
 
+COPY ./entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+
 CMD [ "/usr/local/bin/cool_app", "consumer" ]

@@ -34,9 +34,11 @@ class RabbitMQConsumer(RabbitMQ):
     def on_queue_declared(self, frame: pika.frame.Frame):
         """Handle queue declared event"""
         log.info("RabbitMQ queue declared")
-        self.channel.basic_consume(self.process_message, queue=self.queue)
+        self.channel.basic_consume(
+            self.process_message, queue=self.queue, no_ack=True, exclusive=True
+        )
 
-    def process_message(self, method, head, body):
+    def process_message(self, channel, method, properties, body):
         """Process received messages"""
         log.info("Spawning process to handle received message")
         data = json.loads(body)

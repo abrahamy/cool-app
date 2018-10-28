@@ -72,10 +72,8 @@ def start_producer(args):
         log.error("The csv_file argument must be a valid path to a csv file")
         exit(1)
 
-    messages = []
     df = pd.read_csv(csv_path, header=None, names=["name", "email"])
-    for row in df:
-        messages.append(tuple(row))
+    messages = [tuple(row) for row in df.to_records(index=False)]
 
     producer = RabbitMQProducer(messages, "coolapp")
     producer.start()

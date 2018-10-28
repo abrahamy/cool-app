@@ -1,8 +1,13 @@
 import argparse
 import pathlib
+import sys
+import warnings
 
 from cool_app.consumer import start_consumer
 from cool_app.producer import start_producer
+
+if not sys.warnoptions:
+    warnings.filterwarnings("ignore")
 
 
 def main():

@@ -51,3 +51,11 @@ class RabbitMQProducer(RabbitMQ):
         except Exception:
             log.exception(f"Delivery failed for {message}")
             self.failed_deliveries.append(message)
+
+
+def start_producer(*args):
+    """Start the rabbitmq producer"""
+    # @todo: parse csv file
+    messages = []
+    producer = RabbitMQProducer(messages, "coolapp")
+    producer.start()

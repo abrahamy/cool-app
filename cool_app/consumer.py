@@ -43,3 +43,9 @@ class RabbitMQConsumer(RabbitMQ):
         message = Message(*data)
         p = Process(target=persist_message, args=(message,))
         p.start()
+
+
+def start_consumer(*args):
+    """Start the rabbitmq consumer"""
+    consumer = RabbitMQConsumer("coolapp")
+    consumer.start()

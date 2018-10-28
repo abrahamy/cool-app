@@ -1,6 +1,7 @@
 __version__ = "0.1.0"
 
 import abc
+import collections
 import logging
 import sys
 import typing
@@ -19,14 +20,17 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+Message = collections.namedtuple("Message", ["name", "email"])
+
 
 class RabbitMQ(abc.ABC):
     """Implements default event handlers for RabbitMQ"""
 
-    def __init__(self, queue: typing.AnyStr):
+    def __init__(self, queue: typing.AnyStr, exchange: typing.AnyStr = ""):
         self.connection = None
         self.channel = None
         self.queue = queue
+        self.exchange = exchange
 
     def on_connection_open(self, connection: pika.connection.Connection):
         """Handle connection open event"""
@@ -60,7 +64,15 @@ class RabbitMQ(abc.ABC):
             log.info("Starting IO loop")
             connection.ioloop.start()
         except KeyboardInterrupt:
-            log.info("Gracefully shutting down RabbitMQ connection")
-            connection.close()
-            connection.ioloop.start()
-            log.info("RabbitMQ connection shutdown completed")
+            self.stop()
+
+    def stop(self):
+        """Gracefully shut down RabbitMQ connection"""
+        log.info("Gracefully shutting down RabbitMQ connection")
+
+        if self.connection is not None:
+            self.connection.close()
+            self.connection.ioloop.start()
+            self.connection = None
+
+        log.info("RabbitMQ connection shutdown completed")

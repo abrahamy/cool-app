@@ -19,6 +19,7 @@ def persist_message(message: Message):
         customer = Customer(name=message.name, email=message.email)
         session.add(customer)
         session.commit()
+        log.info("Message persisted successfully")
     except sqlalchemy.exc.IntegrityError:
         session.rollback()
     except Exception:
@@ -37,6 +38,7 @@ class RabbitMQConsumer(RabbitMQ):
 
     def process_message(self, method, head, body):
         """Process received messages"""
+        log.info("Spawning process to handle received message")
         data = json.loads(body)
         message = Message(*data)
         p = Process(target=persist_message, args=(message,))

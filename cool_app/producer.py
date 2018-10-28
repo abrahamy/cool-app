@@ -1,8 +1,10 @@
 import json
 import logging
+import pathlib
 import time
 import typing
 
+import pandas as pd
 import pika
 
 from cool_app import Message, RabbitMQ
@@ -53,9 +55,27 @@ class RabbitMQProducer(RabbitMQ):
             self.failed_deliveries.append(message)
 
 
-def start_producer(*args):
+def _is_path(path: typing.AnyStr) -> bool:
+    """Check if the csv file is a valid path"""
+    return (
+        isinstance(path, pathlib.Path)
+        and path.exists()
+        and path.is_file()
+        and path.suffix.lower() == ".csv"
+    )
+
+
+def start_producer(args):
     """Start the rabbitmq producer"""
-    # @todo: parse csv file
+    csv_path = args.csv_file
+    if not _is_path(csv_path):
+        log.error("The csv_file argument must be a valid path to a csv file")
+        exit(1)
+
     messages = []
+    df = pd.read_csv(csv_path, header=None, names=["name", "email"])
+    for row in df:
+        messages.append(tuple(row))
+
     producer = RabbitMQProducer(messages, "coolapp")
     producer.start()

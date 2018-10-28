@@ -11,25 +11,11 @@ from cool_app.models import Customer, Session
 log = logging.getLogger(__name__)
 
 
-def persist_message(message: Message):
-    """Stores the message into a database"""
-    session = Session()
-
-    try:
-        customer = Customer(name=message.name, email=message.email)
-        session.add(customer)
-        session.commit()
-        log.info("Message persisted successfully")
-    except sqlalchemy.exc.IntegrityError:
-        session.rollback()
-    except Exception:
-        log.exception("Unexpected error")
-    finally:
-        session.close()
-
-
 class RabbitMQConsumer(RabbitMQ):
     """A consumer for processing rabbitmq messages"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def on_queue_declared(self, frame: pika.frame.Frame):
         """Handle queue declared event"""
@@ -40,11 +26,27 @@ class RabbitMQConsumer(RabbitMQ):
 
     def process_message(self, channel, method, properties, body):
         """Process received messages"""
-        log.info("Spawning process to handle received message")
+        log.info("Saving message to database")
         data = json.loads(body)
         message = Message(*data)
-        p = Process(target=persist_message, args=(message,))
-        p.start()
+        self.store(message)
+
+    @classmethod
+    def store(cls, message: Message):
+        """Stores the message into a database"""
+        session = Session()
+
+        try:
+            customer = Customer(name=message.name, email=message.email)
+            session.add(customer)
+            session.commit()
+            log.info("Message persisted successfully")
+        except sqlalchemy.exc.IntegrityError:
+            session.rollback()
+        except Exception:
+            log.exception("Unexpected error")
+        finally:
+            session.close()
 
 
 def start_consumer(*args):

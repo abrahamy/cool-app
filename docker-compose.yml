@@ -33,7 +33,7 @@ services:
     build: .
     environment:
       LOG_FILE: /var/log/cool-app.log
-      RABBITMQ_URI: "amqp://cool_app:secret@broker:5672/?backpressure_detection=t"
+      RABBITMQ_URI: "amqp://cool_app:secret@broker:5672/"
       DATABASE_URI: "postgresql://cool_app:secret@db:5432/cool_app"
     networks:
       cool_app:

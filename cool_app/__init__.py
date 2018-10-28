@@ -42,13 +42,7 @@ class RabbitMQ(abc.ABC):
         """Handle channel open event"""
         log.info("RabbitMQ channel opened")
         self.channel = channel
-        self.channel.queue_declare(
-            queue=self.queue,
-            durable=True,
-            exclusive=False,
-            auto_delete=False,
-            callback=self.on_queue_declared,
-        )
+        self.channel.queue_declare(self.on_queue_declared, queue=self.queue)
 
     @abc.abstractmethod
     def on_queue_declared(self, frame: pika.frame.Frame):

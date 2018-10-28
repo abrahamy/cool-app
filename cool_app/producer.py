@@ -29,7 +29,7 @@ class RabbitMQProducer(RabbitMQ):
 
         for message in self.outbox:
             self.publish_message(message)
-            time.sleep(1)
+            time.sleep(5)
 
         fail_count = len(self.failed_deliveries)
         log.info(f"{fail_count}/{message_count} delivered successfully")
@@ -44,10 +44,11 @@ class RabbitMQProducer(RabbitMQ):
 
         try:
             self.channel.basic_publish(
-                self.exchange,
-                self.queue,
-                json.dumps(message, ensure_ascii=False),
-                properties,
+                exchange=self.exchange,
+                routing_key=self.queue,
+                body=json.dumps(message, ensure_ascii=False),
+                properties=properties,
+                mandatory=True,
             )
             log.info("Message published to rabbitmq")
         except Exception:

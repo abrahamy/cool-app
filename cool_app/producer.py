@@ -30,7 +30,7 @@ class RabbitMQProducer(RabbitMQ):
 
         for message in self.outbox:
             self.publish_message(message)
-            time.sleep(5)
+            time.sleep(1)
 
         fail_count = len(self.failed_deliveries)
         log.info(f"{fail_count}/{message_count} delivered successfully")

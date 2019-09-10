@@ -12,7 +12,7 @@ psycopg2 = "^2.7"
 pandas = "^0.23.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^3.0"
+pytest = "^5.1"
 
 [tool.poetry.scripts]
 cool_app = "cool_app:__main__.main"

@@ -137,11 +137,11 @@ category = "main"
 description = "Database Abstraction Library"
 name = "sqlalchemy"
 optional = false
-python-versions = "*"
-version = "1.2.12"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "1.3.12"
 
 [metadata]
-content-hash = "69f91379356fa8f91d7fe63489105be6b80cb093fd771a190454f906bd0c1c89"
+content-hash = "ce402df4ba2a374fae6eb25b54992cf6dfd75a2ba34c3dcd495a94a75316b5b1"
 python-versions = "^3.6"
 
 [metadata.hashes]
@@ -159,4 +159,4 @@ pytest = ["a9e5e8d7ab9d5b0747f37740276eb362e6a76275d76cebbb52c6049d93b475db", "b
 python-dateutil = ["063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93", "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"]
 pytz = ["642253af8eae734d1509fc6ac9c1aee5e5b69d76392660889979b9870610a46b", "91e3ccf2c344ffaa6defba1ce7f38f97026943f675b7703f44789768e4cb0ece"]
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
-sqlalchemy = ["c5951d9ef1d5404ed04bae5a16b60a0779087378928f997a294d1229c6ca4d3e"]
+sqlalchemy = ["bfb8f464a5000b567ac1d350b9090cf081180ec1ab4aa87e7bca12dab25320ec"]

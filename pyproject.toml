@@ -6,7 +6,7 @@ authors = ["Abraham Yusuf <abraham.yusuf@ehealthnigeria.org>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-sqlalchemy = "^1.2"
+sqlalchemy = "^1.4"
 pika = "^0.12.0"
 psycopg2 = "^2.7"
 pandas = "^0.23.4"
